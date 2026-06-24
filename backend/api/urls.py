@@ -8,18 +8,21 @@ from .views import (
     LogoutView,
     MeView,
     RegisterView,
-    TerrenoViewSet,
+    # Temporarily disabled for Windows development without GDAL
+    # TerrenoViewSet,
     UserAdminViewSet,
     CalcularProductorView,
     CalcularProductorGeoView,
     OptimizarSemillaView,
     EstadoListView,
     MunicipioListView,
+    MapaEstadisticasView,
 )
 
 # El Router de DRF crea automáticamente las URLs para listar y ver detalles
 router = DefaultRouter()
-router.register(r'terrenos', TerrenoViewSet, basename='terreno')
+# Temporarily disabled terrenos endpoint for Windows development without GDAL
+# router.register(r'terrenos', TerrenoViewSet, basename='terreno')
 router.register(r'ciclos', CicloViewSet, basename='ciclo')
 router.register(r'users', UserAdminViewSet, basename='user-admin')
 
@@ -35,5 +38,6 @@ urlpatterns = [
     path('optimizar-semilla/', OptimizarSemillaView.as_view(), name='optimizar-semilla'),
     path('estados/', EstadoListView.as_view(), name='estados-list'),
     path('municipios/', MunicipioListView.as_view(), name='municipios-list'),
+    path('mapa-estadisticas/', MapaEstadisticasView.as_view(), name='mapa-estadisticas'),
     path('', include(router.urls)),
 ]
