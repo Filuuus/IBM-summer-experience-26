@@ -49,9 +49,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'django.contrib.gis',
+    # Temporarily disabled GIS support for Windows development without GDAL
+    # 'django.contrib.gis',
     'rest_framework',
-    'rest_framework_gis',
+    # 'rest_framework_gis',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -101,17 +102,18 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Temporarily using standard PostgreSQL instead of PostGIS for Windows development
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
-        engine='django.contrib.gis.db.backends.postgis'
+        engine='django.db.backends.postgresql'
     )
 }
 
 # Fallback: If DATABASE_URL is None, use individual environment variables
 if not os.environ.get('DATABASE_URL'):
     DATABASES['default'] = {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_DB', 'crop_analytics'),
         'USER': os.environ.get('POSTGRES_USER', 'usuario_maiz'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password_seguro_dev'),

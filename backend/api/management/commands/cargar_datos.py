@@ -2,7 +2,8 @@ import csv
 import os
 from datetime import datetime
 from django.core.management.base import BaseCommand
-from django.contrib.gis.geos import Point
+# Temporarily disabled GIS support for Windows development without GDAL
+# from django.contrib.gis.geos import Point
 from django.conf import settings
 from django.db import transaction
 from api.models import Estado, Municipio, Terreno, Hibrido, Ciclo, ResultadoLaboratorio, DatoClimatico
@@ -109,7 +110,8 @@ class Command(BaseCommand):
                     if municipio:
                         lat = clean_float(row['latitud_y_gps'])
                         lon = clean_float(row['longitud_x_gps'])
-                        ubicacion = Point(lon, lat, srid=4326) if lon and lat else None
+                        # Temporarily disabled GIS field for Windows development without GDAL
+                        # ubicacion = Point(lon, lat, srid=4326) if lon and lat else None
                         
                         terrenos_to_create.append(Terreno(
                             id=t_id,
@@ -119,7 +121,7 @@ class Command(BaseCommand):
                             latitud_gps=lat or 0.0,
                             longitud_gps=lon or 0.0,
                             altitud=clean_float(row['altitud']),
-                            ubicacion_geo=ubicacion
+                            # ubicacion_geo=ubicacion  # Temporarily disabled
                         ))
                         seen_terreno_ids.add(t_id)
 

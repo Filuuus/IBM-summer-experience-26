@@ -18,7 +18,8 @@ from .serializers import (
     GoogleLoginSerializer,
     LoginSerializer,
     RegisterSerializer,
-    TerrenoGeoSerializer,
+    # Temporarily disabled GIS serializer for Windows development without GDAL
+    # TerrenoGeoSerializer,
     UserRoleUpdateSerializer,
     UserSerializer,
 )
@@ -149,14 +150,15 @@ class UserAdminViewSet(viewsets.ModelViewSet):
         user.save(update_fields=['is_active'])
         return Response(AdminUserSerializer(user).data)
 
-class TerrenoViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Devuelve la lista de terrenos.
-    Optimizado con select_related para evitar N+1 queries al cargar municipio y estado.
-    """
-    permission_classes = [AllowAny]
-    queryset = Terreno.objects.select_related('municipio__estado').all()
-    serializer_class = TerrenoGeoSerializer
+# Temporarily disabled TerrenoViewSet for Windows development without GDAL
+# class TerrenoViewSet(viewsets.ReadOnlyModelViewSet):
+#     """
+#     Devuelve la lista de terrenos.
+#     Optimizado con select_related para evitar N+1 queries al cargar municipio y estado.
+#     """
+#     permission_classes = [AllowAny]
+#     queryset = Terreno.objects.select_related('municipio__estado').all()
+#     serializer_class = TerrenoGeoSerializer
 
 class CicloViewSet(viewsets.ReadOnlyModelViewSet):
     """
