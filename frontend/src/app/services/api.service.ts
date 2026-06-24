@@ -30,4 +30,18 @@ export class ApiService {
     optimizarSemilla(datos: any): Observable<any> {
         return this.http.post(`${this.baseUrl}/optimizar-semilla/`, datos);
     }
+
+    getMapStatistics(params?: any): Observable<any> {
+        let queryString = '';
+        if (params) {
+            const queryParams = new URLSearchParams();
+            Object.keys(params).forEach(key => {
+                if (params[key] !== null && params[key] !== undefined) {
+                    queryParams.append(key, params[key].toString());
+                }
+            });
+            queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+        }
+        return this.http.get(`${this.baseUrl}/mapa-estadisticas/${queryString}`);
+    }
 }

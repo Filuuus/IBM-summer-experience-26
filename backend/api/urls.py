@@ -13,6 +13,7 @@ from .views import (
     UserAdminViewSet,
     CalcularProductorView,
     OptimizarSemillaView,
+    MapaEstadisticasView,
 )
 
 # El Router de DRF crea automáticamente las URLs para listar y ver detalles
@@ -31,5 +32,6 @@ urlpatterns = [
     path('auth/me/', MeView.as_view(), name='auth-me'),
     path('calcular-productor/', CalcularProductorView.as_view(), name='calcular-productor'),
     path('optimizar-semilla/', OptimizarSemillaView.as_view(), name='optimizar-semilla'),
+    path('mapa-estadisticas/', MapaEstadisticasView.as_view(), name='mapa-estadisticas'),
     path('', include(router.urls)),
 ]
