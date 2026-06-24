@@ -12,7 +12,7 @@ Cambio de prueba
 [![Angular](https://img.shields.io/badge/angular-21-red.svg)](https://angular.io/)
 [![PostgreSQL](https://img.shields.io/badge/postgresql-16-blue.svg)](https://www.postgresql.org/)
 
-> **Advanced geospatial intelligence platform for optimizing corn production through machine learning and GeoAI techniques.**
+> **Advanced geospatial intelligence platform for optimizing corn production through machine learning and Leafmap techniques.**
 
 Developed as part of the IBM Summer Experience 2026 program, CropAnalytics transforms agricultural data analysis by integrating historical data, real-time weather information, and machine learning to provide accurate yield predictions and actionable farming recommendations.
 
@@ -166,7 +166,7 @@ For complete technology details, see [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENT
 ┌─────────────────────────────────────────┐
 │   Django Backend API (Port 8000)        │
 │  ┌────────────┐  ┌────────────┐        │
-│  │ ML Engine  │  │  GeoAI     │        │
+│  │ ML Engine  │  │  Leafmap   │        │
 │  └────────────┘  └────────────┘        │
 └─────────────────────────────────────────┘
                     │
@@ -192,7 +192,7 @@ For detailed architecture, see [ARCHITECTURE.md](ARCHITECTURE.md).
 - **Predictions**: Yield forecasting with confidence intervals
 - **Target Accuracy**: R² > 0.85, RMSE < 1.5 t/ha
 
-### GeoAI Analysis
+### Leafmap Analysis
 
 - **Spatial Autocorrelation**: Moran's I analysis for pattern detection
 - **Hotspot Analysis**: Identify high/low production clusters
@@ -260,7 +260,7 @@ The API provides RESTful endpoints for:
 - Agricultural data (hybrids, growing cycles)
 - ML predictions (yield forecasting, quality metrics)
 - Recommendations (hybrid selection, planting dates)
-- GeoAI analysis (production zones, spatial patterns)
+- Leafmap analysis (production zones, spatial patterns)
 
 Example API call:
 

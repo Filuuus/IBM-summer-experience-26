@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Transform CropAnalytics from a descriptive analytics tool into a **predictive geo-spatial intelligence platform** using machine learning (SVM, GeoAI) to provide region-specific recommendations and discover hidden correlations in agricultural data.
+Transform CropAnalytics from a descriptive analytics tool into a **predictive geo-spatial intelligence platform** using machine learning (SVM, Leafmap) to provide region-specific recommendations and discover hidden correlations in agricultural data.
 
 ---
 
@@ -42,7 +42,7 @@ Transform CropAnalytics from a descriptive analytics tool into a **predictive ge
 - SVM model training and optimization
 - Model evaluation and validation
 
-**Phase 4: GeoAI Integration (Weeks 11-14)**
+**Phase 4: Leafmap Integration (Weeks 11-14)**
 - Spatial autocorrelation analysis
 - Hotspot identification (LISA)
 - Geographically Weighted Regression
@@ -217,11 +217,11 @@ class SVMYieldPredictor:
 
 ---
 
-## Phase 4: GeoAI Integration
+## Phase 4: Leafmap Integration
 
 ### Spatial Analysis
 
-Create `backend/ml/geoai/spatial_analysis.py`:
+Create `backend/ml/leafmap/spatial_analysis.py`:
 
 ```python
 from pysal.lib import weights
@@ -515,7 +515,7 @@ Add to `package.json`:
 
 ### Development Workflow
 
-1. **Branch strategy**: `feature/ml-integration`, `feature/geoai`, `feature/kpi-dashboard`
+1. **Branch strategy**: `feature/ml-integration`, `feature/leafmap`, `feature/kpi-dashboard`
 2. **Code reviews**: All ML code requires peer review
 3. **Testing**: Unit tests for feature engineering, integration tests for APIs
 4. **Documentation**: Document all models, features, and APIs
@@ -530,7 +530,7 @@ Add to `package.json`:
 1. **Prepare environment**
    ```bash
    cd backend
-   mkdir -p ml/models ml/geoai
+   mkdir -p ml/models ml/leafmap
    ```
 
 2. **Create training script**

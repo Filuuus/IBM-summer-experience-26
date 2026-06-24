@@ -8,7 +8,7 @@
 4. [Frontend Architecture](#frontend-architecture)
 5. [Database Design](#database-design)
 6. [Machine Learning Pipeline](#machine-learning-pipeline)
-7. [GeoAI Components](#geoai-components)
+7. [Leafmap Components](#leafmap-components)
 8. [API Design](#api-design)
 9. [Security Architecture](#security-architecture)
 10. [Deployment Architecture](#deployment-architecture)
@@ -61,7 +61,7 @@ CropAnalytics follows a **modern three-tier architecture** with clear separation
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │              Business Logic Layer                    │  │
 │  │  ┌────────────┐  ┌────────────┐  ┌────────────┐    │  │
-│  │  │ ML Engine  │  │  GeoAI     │  │  Weather   │    │  │
+│  │  │ ML Engine  │  │  Leafmap   │  │  Weather   │    │  │
 │  │  └────────────┘  └────────────┘  └────────────┘    │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
@@ -99,7 +99,7 @@ graph TB
         Serializers[Serializers]
         Models[Django Models]
         ML[ML Pipeline]
-        GeoAI[GeoAI Engine]
+        Leafmap[Leafmap Engine]
     end
     
     subgraph Data["Data Storage"]
@@ -114,9 +114,9 @@ graph TB
     Serializers --> Models
     Models --> DB
     Views --> ML
-    Views --> GeoAI
+    Views --> Leafmap
     ML --> Files
-    GeoAI --> DB
+    Leafmap --> DB
     Views --> Cache
 ```
 
@@ -148,7 +148,7 @@ backend/
 │   ├── training.py            # Training pipeline
 │   └── prediction.py          # Prediction service
 │
-├── geoai/                      # GeoAI module (planned)
+├── leafmap/                    # Leafmap module (planned)
 │   ├── spatial_analysis.py    # Spatial operations
 │   ├── clustering.py          # Geographic clustering
 │   └── interpolation.py       # Spatial interpolation
@@ -250,7 +250,7 @@ class CicloViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def spatial_analysis(self, request):
         """Spatial pattern analysis"""
-        # Perform GeoAI analysis
+        # Perform Leafmap analysis
         # Return GeoJSON results
         pass
 ```
@@ -562,7 +562,7 @@ def evaluate_model(y_true, y_pred):
 
 ---
 
-## GeoAI Components
+## Leafmap Components
 
 ### Spatial Analysis Architecture
 
@@ -650,7 +650,7 @@ class ProductionZoneAnalyzer:
 │   ├── POST   /optimize_planting/ # Planting date
 │   └── GET    /similar_conditions/  # Similar cycles
 │
-└── geo/                        # GeoAI analysis
+└── geo/                        # Leafmap analysis
     ├── GET    /production_zones/  # Zone mapping
     ├── POST   /interpolate/       # Spatial interpolation
     └── GET    /hotspots/          # Hotspot analysis

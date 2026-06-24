@@ -2,7 +2,7 @@
 
 ## Overview
 
-**CropAnalytics** is an advanced geospatial intelligence platform designed to optimize corn production through machine learning and GeoAI techniques. The system transforms from a basic milk production calculator into a comprehensive agricultural analytics platform that provides accurate yield predictions, spatial analysis, and actionable recommendations for regional farmers.
+**CropAnalytics** is an advanced geospatial intelligence platform designed to optimize corn production through machine learning and Leafmap techniques. The system transforms from a basic milk production calculator into a comprehensive agricultural analytics platform that provides accurate yield predictions, spatial analysis, and actionable recommendations for regional farmers.
 
 The platform integrates historical agricultural data with real-time weather information, geospatial analysis, and Support Vector Machine (SVM) models to predict crop yields, analyze production patterns, and recommend optimal farming strategies based on location, climate, and agronomic factors.
 
@@ -165,7 +165,7 @@ graph LR
 - Quality prediction: R² > 0.80 per component
 - Spatial accuracy: Moran's I > 0.6
 
-### 3. GeoAI Components
+### 3. Leafmap Components
 
 **Spatial Analysis**:
 - **Moran's I**: Measure spatial autocorrelation

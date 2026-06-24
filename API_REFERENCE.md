@@ -11,7 +11,7 @@
 7. [Agricultural Endpoints](#agricultural-endpoints)
 8. [Prediction Endpoints](#prediction-endpoints)
 9. [Recommendation Endpoints](#recommendation-endpoints)
-10. [GeoAI Endpoints](#geoai-endpoints)
+10. [Leafmap Endpoints](#leafmap-endpoints)
 11. [Weather Endpoints](#weather-endpoints)
 12. [Rate Limiting](#rate-limiting)
 
@@ -174,7 +174,7 @@ https://api.cropanalytics.com/v1/
 | `RATE_LIMIT_EXCEEDED` | Too many requests |
 | `INTERNAL_ERROR` | Server error |
 | `ML_PREDICTION_FAILED` | ML model prediction error |
-| `SPATIAL_ANALYSIS_FAILED` | GeoAI operation error |
+| `SPATIAL_ANALYSIS_FAILED` | Leafmap operation error |
 
 ---
 
@@ -828,7 +828,7 @@ GET /api/v1/recommendations/similar_conditions/?ciclo_id=1&limit=10
 
 ---
 
-## GeoAI Endpoints
+## Leafmap Endpoints
 
 ### Get Production Zones
 
@@ -1071,7 +1071,7 @@ No rate limiting in development mode.
 | Read (GET) | 100 | 5000 |
 | Write (POST/PUT/PATCH) | 30 | 1000 |
 | ML Predictions | 20 | 500 |
-| GeoAI Analysis | 10 | 200 |
+| Leafmap Analysis | 10 | 200 |
 
 ### Rate Limit Headers
 
@@ -1171,7 +1171,7 @@ Content-Type: application/json
 - `prediction.completed`: ML prediction finished
 - `cycle.created`: New growing cycle created
 - `cycle.updated`: Cycle data updated
-- `analysis.completed`: GeoAI analysis finished
+- `analysis.completed`: Leafmap analysis finished
 
 ---
 
@@ -1241,7 +1241,7 @@ const prediction = await fetch(`${BASE_URL}/ciclos/predict_yield/`, {
 - Initial API release
 - Basic CRUD operations
 - ML prediction endpoints (planned)
-- GeoAI analysis endpoints (planned)
+- Leafmap analysis endpoints (planned)
 - Weather integration (planned)
 
 ---
