@@ -31,6 +31,15 @@ export class ApiService {
         return this.http.post(`${this.baseUrl}/optimizar-semilla/`, datos);
     }
 
+    getEstados(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/estados/`);
+    }
+
+    getMunicipios(estadoId?: number): Observable<any> {
+        const params = estadoId ? `?estado_id=${estadoId}` : '';
+        return this.http.get(`${this.baseUrl}/municipios/${params}`);
+    }
+
     getMapStatistics(params?: any): Observable<any> {
         let queryString = '';
         if (params) {
@@ -43,5 +52,23 @@ export class ApiService {
             queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
         }
         return this.http.get(`${this.baseUrl}/mapa-estadisticas/${queryString}`);
+    }
+
+    recomendacionHumedad(datos: {
+        lat: number;
+        lon: number;
+        extension_ha: number;
+        has_irrigation: boolean;
+        year?: number;
+        precio_ensilaje?: number;
+        precio_leche?: number;
+        costo_produccion?: number;
+        costo_transporte?: number;
+    }): Observable<any> {
+        return this.http.post(`${this.baseUrl}/recomendacion-humedad/`, datos);
+    }
+
+    getSoilMoisturePlots(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/soil-moisture/plots/`);
     }
 }

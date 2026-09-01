@@ -63,6 +63,17 @@ export class MapView implements OnInit, AfterViewInit, OnDestroy {
 
   private initMap(): void {
     try {
+      console.log('Initializing map...');
+      const mapElement = document.getElementById('map');
+      if (!mapElement) {
+        console.error('Map element not found!');
+        this.error.set('Elemento del mapa no encontrado');
+        this.isLoading.set(false);
+        return;
+      }
+      
+      console.log('Map element found:', mapElement);
+      
       // Initialize map centered on Los Altos de Jalisco region
       // Coordinates adjusted for better coverage of Los Altos municipalities
       this.map = L.map('map', {
@@ -73,12 +84,16 @@ export class MapView implements OnInit, AfterViewInit, OnDestroy {
         maxBounds: [[19.5, -104.0], [22.0, -101.5]] // Restrict to Jalisco region
       });
 
+      console.log('Map initialized:', this.map);
+
       // Add OpenStreetMap tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 15,
         minZoom: 8,
         attribution: '© OpenStreetMap'
       }).addTo(this.map);
+
+      console.log('Tile layer added');
 
       // Initialize markers layer
       this.markersLayer = L.layerGroup().addTo(this.map);
@@ -87,6 +102,7 @@ export class MapView implements OnInit, AfterViewInit, OnDestroy {
       setTimeout(() => {
         if (this.map) {
           this.map.invalidateSize();
+          console.log('Map size invalidated');
         }
       }, 200);
     } catch (error) {
@@ -116,6 +132,7 @@ export class MapView implements OnInit, AfterViewInit, OnDestroy {
 
     this.apiService.getMapStatistics(params).subscribe({
       next: (data) => {
+        console.log('Map data received:', data);
         this.mapData.set(data);
         this.updateMarkers(data);
         this.isLoading.set(false);
