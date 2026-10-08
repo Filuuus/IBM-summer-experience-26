@@ -115,21 +115,19 @@
           </div>
 
           <div class="pt-2 flex flex-col gap-2">
-            <button type="submit" [disabled]="loading"
+            <button type="submit" [disabled]="loading" [attr.aria-busy]="loading"
               class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white font-bold py-3 px-4 rounded-xl shadow-md active:scale-[0.98] transition-all disabled:opacity-60 cursor-pointer text-xs">
-              <ng-container *ngIf="!loading">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              @if (!loading) {
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 shrink-0" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 21l8.982-11.825H14l1-6.175L6 14.825H10l-.187 1.079Z" />
                 </svg>
-                Analizar Parcela
-              </ng-container>
-              <ng-container *ngIf="loading">
-                <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              } @else {
+                <svg class="animate-spin motion-reduce:animate-none h-4 w-4 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Analizando...
-              </ng-container>
+              }
+              <span>{{ loading ? 'Analizando...' : 'Analizar Parcela' }}</span>
             </button>
             <button *ngIf="result" type="button" (click)="reset()"
               class="w-full flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 active:scale-[0.98] transition-all cursor-pointer text-xs">

@@ -76,3 +76,18 @@ del código se consulta con Git. Agrega las entradas más recientes al inicio.
 - **Estado:** sin commit / incluido en el commit de esta tarea / hash conocido.
 - **Pendientes:** ninguno o limitaciones concretas.
 ```
+
+## 2026-10-08 — Codex — Etiqueta del botón de análisis SMAP
+
+- **Objetivo:** corregir los textos repetidos del botón al iniciar el análisis de parcela.
+- **Archivos:** `frontend/src/app/soil-analysis/soil-analysis.component.html`,
+  `frontend/src/app/soil-analysis/soil-analysis.component.spec.ts`, `AGENT_CHANGELOG.md`.
+- **Cambios:** una única etiqueta interpolada para los estados normal y de carga;
+  iconos alternados con `@if`/`@else`, tamaño protegido y animación sensible a
+  movimiento reducido; atributo `aria-busy` durante la carga.
+- **Verificación:** desde `frontend/`, `npm run build` correcto con avisos de
+  Node 25 y dependencias CommonJS; `npm test -- --watch=false --include='src/app/soil-analysis/**/*.spec.ts'`:
+  1 prueba aprobada, comprueba texto único, icono único y deshabilitación en cinco
+  transiciones de estado. `git diff --check`: correcto.
+- **Estado:** cambios locales en rama `arreglos`, sin commit.
+- **Pendientes:** comprobación visual en navegador y auditoría AXE no ejecutadas.
