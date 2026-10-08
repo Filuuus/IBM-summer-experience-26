@@ -3,200 +3,82 @@
   <div class="role-toggle-bar">
     <span>Modo Captura (Investigador)</span>
     @if (authService.hasAnyRole(['JEFE', 'SADMIN'])) {
-    <button class="btn btn-soft" (click)="switchToJefe()">Cambiar a Jefe</button>
+      <button class="btn btn-soft" (click)="switchToJefe()">Cambiar a Jefe</button>
     }
   </div>
   <div class="app">
-  <header>
-    <section class="hero">
-      <div class="hero-top">
-        <div class="brand">
-          <h1>Sentineli</h1>
-          <p>
-            Captura ágil para registros de siembra y cosecha de híbridos de maíz.
-            La interfaz está pensada para ser clara, rápida y cómoda en campo.
-          </p>
-        </div>
-        <div class="status">Formulario de investigador activo</div>
-      </div>
-    </section>
-  </header>
-
-  <main>
-    <div class="top-grid">
-      <section class="card">
-        <div class="card-head">
-          <h2>Datos generales del registro</h2>
-          <p>Completa primero la información base para identificar el muestreo sin perder tiempo.</p>
-        </div>
-        <div class="card-body">
-          <div class="grid grid-2">
-            <div class="field">
-              <label for="fecha">Fecha y hora</label>
-              <input id="fecha" type="datetime-local" />
-              <div class="hint">Se puede dejar precargado al entrar al formulario.</div>
-            </div>
-
-            <div class="field">
-              <label for="investigador">Investigador</label>
-              <input id="investigador" type="text" placeholder="Nombre completo" />
-            </div> 
-
-            <div class="field">
-              <label for="municipio">Municipio</label>
-              <select id="municipio">
-                <option value="">Selecciona una opción</option>
-                <option>Lagos de Moreno</option>
-                <option>San Juan de los Lagos</option>
-                <option>Jalostotitlán</option>
-                <option>Valle de Guadalupe</option>
-                <option>Tepatitlán</option>
-                <option>Acatic</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="parcela">Parcela</label>
-              <input id="parcela" type="text" placeholder="Nombre o identificador de la parcela" />
-              <div class="hint">Este campo no es opcional. Ayuda a ubicar cada registro con precisión.</div>
+    <header class="hero"><div class="brand"><h1>Captura de datos de campo</h1><p>Registra el muestreo de híbridos de maíz y consulta tus mediciones guardadas.</p></div></header>
+    <main>
+      @if (error()) { <p class="note capture-error" role="alert">{{ error() }}</p> }
+      @if (notice()) { <p class="note" role="status">{{ notice() }}</p> }
+      @if (loading()) { <p role="status">Cargando formulario y catálogos…</p> }
+      @else if (config()) {
+        <form [formGroup]="form" (ngSubmit)="submit()" class="section">
+          <div class="section-head"><h2>Registro de muestreo</h2><p>Los campos con * son obligatorios. Configuración publicada: versión {{ config()?.version }}.</p></div>
+          <div class="section-body">
+            <fieldset class="capture-fields grid grid-3" [disabled]="saving()">
+              <legend class="sr-only">Datos generales y mediciones de campo</legend>
+              @for (field of fields(); track field.key) {
+                <div class="field">
+                  <label [for]="field.key">{{ field.label }}{{ field.required ? ' *' : '' }}</label>
+                  @switch (field.type) {
+                    @case ('select') {
+                      <select [id]="field.key" [formControlName]="field.key" [attr.aria-required]="field.required" [attr.aria-invalid]="invalid(field.key)" [attr.aria-describedby]="invalid(field.key) ? field.key + '-error' : null">
+                        <option value="">Selecciona una opción</option>
+                        @if (field.catalog) {
+                          @for (option of options(field); track option.id) {
+                            <option [value]="option.id">{{ option.nombre }}{{ option.estado__nombre ? ' — ' + option.estado__nombre : '' }}{{ option.marca ? ' — ' + option.marca : '' }}</option>
+                          }
+                        } @else {
+                          @for (option of field.options; track option) { <option [value]="option">{{ option }}</option> }
+                        }
+                      </select>
+                      @if (field.catalog && options(field).length === 0) { <p class="hint">El catálogo está vacío. Solicita su carga al administrador.</p> }
+                    }
+                    @case ('textarea') {
+                      <textarea [id]="field.key" [formControlName]="field.key" maxlength="5000" [attr.aria-required]="field.required" [attr.aria-invalid]="invalid(field.key)" [attr.aria-describedby]="invalid(field.key) ? field.key + '-error' : null"></textarea>
+                    }
+                    @default {
+                      <input [id]="field.key" [type]="field.type" [formControlName]="field.key" [attr.min]="field.min ?? null" [attr.max]="field.max ?? null" [attr.step]="field.step ?? 'any'" [attr.aria-required]="field.required" [attr.aria-invalid]="invalid(field.key)" [attr.aria-describedby]="invalid(field.key) ? field.key + '-error' : null" />
+                    }
+                  }
+                  @if (invalid(field.key)) { <p class="hint capture-error" [id]="field.key + '-error'">Completa el campo con un valor válido{{ field.min !== undefined ? ' (mínimo ' + field.min + ')' : '' }}{{ field.max !== undefined ? ' (máximo ' + field.max + ')' : '' }}.</p> }
+                </div>
+              }
+            </fieldset>
+            <div class="actions">
+              <button class="btn btn-primary" type="submit" [disabled]="saving()">{{ saving() ? 'Guardando…' : 'Guardar registro' }}</button>
+              <button class="btn btn-secondary" type="button" (click)="clear()" [disabled]="saving()">Limpiar campos</button>
+              <button class="btn btn-soft" type="button" (click)="submit(true)" [disabled]="saving()">Guardar y enviar a gráficas</button>
+              <button class="btn btn-soft" type="button" (click)="load(true)" [disabled]="saving()">Actualizar formulario</button>
+              <button class="btn btn-soft" type="button" (click)="viewRecords()" [disabled]="recordsLoading()">Ver registros y gráficas</button>
             </div>
           </div>
-        </div>
-      </section>
-
-      <aside class="card">
-        <div class="card-head">
-          <h2>Guía rápida</h2>
-          <p>Todo lo necesario para llenar el registro sin tropiezos.</p>
-        </div>
-        <div class="card-body helper-panel">
-          <div class="info-box">
-            <h3>Flujo recomendado</h3>
-            <p>Llena primero los datos generales, después los datos agronómicos y al final las observaciones.</p>
+        </form>
+      } @else { <button class="btn btn-primary" (click)="load()">Reintentar carga</button> }
+      @if (showRecords()) {
+        <section class="section" aria-labelledby="records-title">
+          <div class="section-head"><h2 id="records-title">Registros y gráficas de campo</h2><p>{{ total() }} registros disponibles. El investigador consulta sus registros; el jefe consulta los del equipo.</p></div>
+          <div class="section-body">
+            @if (recordsLoading()) { <p role="status">Cargando registros…</p> }
+            @else {
+              @if (chartRecords().length) {
+                <h3>Rendimiento estimado (t/ha) de esta página</h3>
+                @for (record of chartRecords(); track record.id) {
+                  <div class="capture-bar-row"><span>#{{ record.id }} · {{ record.parcela }} · {{ record.hibrido_nombre }}</span><div class="capture-bar" [style.width.%]="yieldWidth(record)"></div><strong>{{ record.datos['rendimiento'] }} t/ha</strong></div>
+                }
+              } @else { <p>No hay mediciones de rendimiento en esta página para graficar.</p> }
+              <div class="capture-table-scroll" tabindex="0" role="region" aria-label="Tabla de mediciones guardadas"><table class="capture-table"><caption>Mediciones guardadas</caption><thead><tr><th scope="col">Registro</th><th scope="col">Fecha</th><th scope="col">Investigador</th><th scope="col">Municipio / parcela</th><th scope="col">Híbrido / ciclo</th><th scope="col">Mediciones</th></tr></thead><tbody>
+                @for (record of records(); track record.id) {
+                  <tr><td>#{{ record.id }}</td><td>{{ record.fecha | date:'short' }}</td><td>{{ record.investigador_nombre }}</td><td>{{ record.municipio_nombre }} / {{ record.parcela }}</td><td>{{ record.hibrido_nombre }} / {{ record.ciclo }}</td><td>@for (field of config()?.fields; track field.key) { @if (record.datos[field.key] !== undefined && record.datos[field.key] !== null) { <div>{{ field.label }}: {{ record.datos[field.key] }}</div> } }</td></tr>
+                } @empty { <tr><td colspan="6">Todavía no hay registros guardados.</td></tr> }
+              </tbody></table></div>
+              <div class="actions"><button class="btn btn-secondary" (click)="loadRecords(page() - 1)" [disabled]="page() <= 1">Anterior</button><span>Página {{ page() }}</span><button class="btn btn-secondary" (click)="loadRecords(page() + 1)" [disabled]="page() * 50 >= total()">Siguiente</button></div>
+            }
           </div>
-
-          <div class="info-box">
-            <h3>Campos clave</h3>
-            <div class="chips">
-              <span class="chip">Municipio</span>
-              <span class="chip">Parcela</span>
-              <span class="chip">Híbrido</span>
-              <span class="chip">Etapa</span>
-              <span class="chip">Rendimiento</span>
-            </div>
-          </div>
-
-          <div class="info-box">
-            <h3>Estado del registro</h3>
-            <div class="mini-list">
-              <div class="mini-item"><strong>Captura</strong><span class="tag">Pendiente</span></div>
-              <div class="mini-item"><strong>Revisión</strong><span class="tag">Por enviar</span></div>
-              <div class="mini-item"><strong>Gráficas</strong><span class="tag">Disponible</span></div>
-            </div>
-          </div>
-        </div>
-      </aside>
-    </div>
-
-    <section class="section">
-      <div class="section-head">
-        <h2>Datos agronómicos y de campo</h2>
-        <p>Campos organizados para que el investigador lea de arriba hacia abajo sin sentir que el formulario “muerde”.</p>
-      </div>
-
-      <div class="section-body">
-        <div class="grid grid-3">
-          <div class="field">
-            <label for="hibrido">Híbrido</label>
-            <select id="hibrido">
-              <option value="">Selecciona</option>
-              <option>Híbrido 1</option>
-              <option>Híbrido 2</option>
-              <option>Experimental</option>
-              <option>Otro</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="ciclo">Ciclo</label>
-            <select id="ciclo">
-              <option value="">Selecciona</option>
-              <option>Temporal</option>
-              <option>Riego</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="etapa">Etapa fenológica</label>
-            <select id="etapa">
-              <option value="">Selecciona</option>
-              <option>Emergencia</option>
-              <option>Vegetativo</option>
-              <option>Floración</option>
-              <option>Llenado de grano</option>
-              <option>Madurez</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="altura">Altura de planta (cm)</label>
-            <input id="altura" type="number" step="0.1" placeholder="Ej. 120.5" />
-          </div>
-
-          <div class="field">
-            <label for="tallo">Diámetro de tallo (cm)</label>
-            <input id="tallo" type="number" step="0.1" placeholder="Ej. 2.4" />
-          </div>
-
-          <div class="field">
-            <label for="hojas">Número de hojas</label>
-            <input id="hojas" type="number" step="1" placeholder="Ej. 14" />
-          </div>
-
-          <div class="field">
-            <label for="ndvi">NDVI</label>
-            <input id="ndvi" type="number" step="0.01" placeholder="Ej. 0.78" />
-          </div>
-
-          <div class="field">
-            <label for="humedad">Humedad del suelo (%)</label>
-            <input id="humedad" type="number" step="0.1" placeholder="Ej. 32.5" />
-          </div>
-
-          <div class="field">
-            <label for="temp">Temperatura ambiente (°C)</label>
-            <input id="temp" type="number" step="0.1" placeholder="Ej. 28.3" />
-          </div>
-
-          <div class="field">
-            <label for="lluvia">Precipitación (mm)</label>
-            <input id="lluvia" type="number" step="0.1" placeholder="Ej. 12.8" />
-          </div>
-
-          <div class="field">
-            <label for="rendimiento">Rendimiento estimado (t/ha)</label>
-            <input id="rendimiento" type="number" step="0.1" placeholder="Ej. 8.7" />
-          </div>
-
-          <div class="field">
-            <label for="observaciones">Observaciones</label>
-            <textarea id="observaciones" placeholder="Condiciones del muestreo, incidencias, plagas, clima, notas de campo..."></textarea>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-primary" type="button">Guardar registro</button>
-          <button class="btn btn-secondary" type="button">Limpiar campos</button>
-          <button class="btn btn-soft" type="button">Enviar a gráficas</button>
-        </div>
-
-        <div class="note">
-          Esta versión prioriza una captura rápida con jerarquía visual clara, controles grandes y etiquetas sencillas.
-          Más adelante se puede conectar con backend, validaciones y almacenamiento.
-        </div>
-      </div>
-    </section>
-  </main>
+        </section>
+      }
+    </main>
   </div>
   <footer-1></footer-1>
 </div>

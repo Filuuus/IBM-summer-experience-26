@@ -191,3 +191,31 @@ class SoilMoisturePlot(models.Model):
 
     def __str__(self):
         return f"SoilMoisture({self.plot_id}, {self.analysis_date})"
+
+
+# Field measurements are distinct from laboratory results used by recommendations.
+class ConfiguracionCaptura(models.Model):
+    clave = models.CharField(max_length=30, unique=True, default='investigador')
+    borrador = models.JSONField(default=list)
+    publicados = models.JSONField(default=list)
+    version = models.PositiveIntegerField(default=1)
+    actualizado_por = models.ForeignKey(
+        UsuarioCustom, null=True, on_delete=models.SET_NULL, related_name='+')
+    actualizado_en = models.DateTimeField(auto_now=True)
+    publicado_en = models.DateTimeField(null=True, blank=True)
+
+
+class RegistroCaptura(models.Model):
+    investigador = models.ForeignKey(UsuarioCustom, on_delete=models.PROTECT, related_name='capturas')
+    investigador_nombre = models.CharField(max_length=200)
+    fecha = models.DateTimeField()
+    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='capturas')
+    parcela = models.CharField(max_length=150)
+    hibrido = models.ForeignKey(Hibrido, on_delete=models.PROTECT, related_name='capturas')
+    ciclo = models.CharField(max_length=20, choices=Ciclo.CONDICION_CHOICES)
+    datos = models.JSONField(default=dict)
+    version_config = models.PositiveIntegerField()
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fecha', '-id']

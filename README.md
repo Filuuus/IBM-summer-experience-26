@@ -90,3 +90,44 @@ ng serve --open
 | `http://localhost:4200/calculator` | Wisconsin MILK 2024 calculator |
 | `http://localhost:4200/analytics` | Analytics dashboard |
 | `http://localhost:8000/api/soil-moisture/plots/` | 11 reference plots (JSON) |
+
+
+### Captura de datos de campo
+
+- `/captura/investigador`: formulario con catálogos reales, limpieza de campos,
+  guardado y consulta paginada de registros; gráfica de rendimiento de la página.
+  El investigador ve sus registros y JEFE/SADMIN ven los del equipo.
+- `/captura/jefe`: búsqueda, filtros y vista previa de campos. **Guardar borrador**
+  conserva las preferencias; **Publicar cambios** las aplica al formulario del
+  equipo. **Restablecer borrador** recupera los campos iniciales sin cambiar la
+  versión publicada. Los campos obligatorios no se pueden ocultar.
+- **Actualizar formulario** carga la última versión publicada y conserva los
+  valores de los campos que continúen visibles. Si un jefe publica mientras hay
+  una captura abierta, el servidor pide actualizar antes de guardar.
+
+Los endpoints requieren JWT: `GET /api/captura/catalogos/`,
+`GET/PUT /api/captura/config/` y `GET/POST /api/captura/registros/`.
+El borrador se consulta con `?draft=1` (solo JEFE/SADMIN); los registros se
+paginan con `?page=1` en grupos de 50.
+
+Aplica las tablas en cada entorno con `cd backend` y `python manage.py migrate`.
+`RegistroCaptura` almacena el responsable autenticado, fecha del muestreo,
+municipio, parcela, híbrido, ciclo y mediciones opcionales. `ConfiguracionCaptura`
+almacena borrador, campos publicados y versión. Estas mediciones de campo no se
+convierten automáticamente en `ResultadoLaboratorio` ni alimentan las gráficas
+históricas o las fórmulas del recomendador: se consultan en **Ver registros y
+gráficas** dentro de captura.
+
+Verificación aislada (sin modificar la base configurada):
+
+```bash
+cd backend
+python manage.py test api --settings=core.test_settings
+```
+
+Pruebas de la interfaz de captura:
+
+```bash
+cd frontend
+npm test -- --watch=false --include='src/app/upload/**/*.spec.ts'
+```

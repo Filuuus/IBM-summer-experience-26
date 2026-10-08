@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
+from .capture_views import CaptureConfigView, CaptureCatalogView, CaptureRecordsView
 from .views import (
     CicloViewSet,
     GoogleLoginView,
@@ -30,6 +31,9 @@ router.register(r'ciclos', CicloViewSet, basename='ciclo')
 router.register(r'users', UserAdminViewSet, basename='user-admin')
 
 urlpatterns = [
+    path('captura/config/', CaptureConfigView.as_view(), name='capture-config'),
+    path('captura/catalogos/', CaptureCatalogView.as_view(), name='capture-catalogs'),
+    path('captura/registros/', CaptureRecordsView.as_view(), name='capture-records'),
     path('auth/register/', RegisterView.as_view(), name='auth-register'),
     path('auth/login/', LoginView.as_view(), name='auth-login'),
     path('auth/google/', GoogleLoginView.as_view(), name='auth-google'),

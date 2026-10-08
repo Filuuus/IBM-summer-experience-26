@@ -1,46 +1,46 @@
 <header
   class="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur dark:border-slate-700/70 dark:bg-slate-900/95"
 >
-  <div class="container mx-auto flex h-16 items-center justify-between px-4">
-    <div class="flex cursor-pointer items-center gap-2" (click)="onHomeClick()">
-      <img src="assets/images/imgs/logoP.png" class="h-9 w-9" alt="Logo" />
-      <span class="text-xl font-bold text-slate-800 dark:text-slate-100">Sentineli</span>
-    </div>
+  <div class="header-layout" (click)="$event.stopPropagation()">
+    <a class="header-brand" routerLink="/" (click)="closeMenus()" aria-label="Sentineli, inicio">
+      <img ngSrc="assets/images/imgs/logoP.png" width="36" height="36" alt="" priority />
+      <span>Sentineli</span>
+    </a>
 
-    <nav class="hidden items-center gap-8 md:flex">
+    <nav id="header-navigation" class="header-navigation" [class.is-open]="isMobileMenuOpen()" aria-label="Navegación principal">
       <a
-        (click)="onHomeClick()"
-        class="cursor-pointer font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
+        routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+        class="nav-link"
         >Inicio</a
       >
       <a
-        (click)="onDashboardClick()"
-        class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-500/10 to-teal-500/10 hover:from-emerald-500/25 hover:to-teal-500/25 border border-emerald-500/20 hover:border-emerald-500/40 text-emerald-700 dark:text-emerald-350 transition-all duration-300 shadow-sm"
+        routerLink="/dashboard" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+        class="nav-link nav-feature nav-milk"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
         WISCONSIN MILK 2024
       </a>
       <a
-        (click)="onAnalyticsClick()"
-        class="cursor-pointer font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
+        routerLink="/analytics" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+        class="nav-link"
         >Analíticas</a
       >
       <a
-        (click)="onSoilAnalysisClick()"
-        class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-500/10 to-indigo-500/10 hover:from-blue-500/25 hover:to-indigo-500/25 border border-blue-500/20 hover:border-blue-500/40 text-blue-700 dark:text-blue-300 transition-all duration-300 shadow-sm"
+        routerLink="/soil-analysis" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+        class="nav-link nav-feature nav-smap"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
         SMAP Análisis
       </a>
       @if (authService.isAuthenticated()) {
-      <div class="relative flex items-center gap-1" (click)="$event.stopPropagation()">
+      <div class="upload-group" (click)="$event.stopPropagation()">
         <a
-          (click)="onUploadDataClick()"
-          class="cursor-pointer font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
+          routerLink="/captura/investigador" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+          class="nav-link"
           >Subir Datos</a
         >
         <button
-          (click)="toggleUploadMenu()"
+          type="button" aria-label="Opciones de captura de datos" [attr.aria-expanded]="isUploadMenuOpen()" aria-controls="upload-options" (click)="toggleUploadMenu()"
           class="flex cursor-pointer items-center text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
         >
           <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -53,8 +53,8 @@
         </button>
         @if (isUploadMenuOpen()) {
         <div
-          role="menu"
-          class="absolute left-0 top-12 z-50 w-44 rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-900"
+          id="upload-options"
+          class="upload-options absolute left-0 top-12 z-50 w-44 rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-900"
         >
           @if (authService.hasAnyRole(['JEFE', 'SADMIN'])) {
           <button
@@ -78,23 +78,23 @@
       }
       @if (authService.hasAnyRole(['JEFE', 'SADMIN'])) {
       <a
-        (click)="onUsersClick()"
-        class="cursor-pointer font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
+        routerLink="/users-management" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()"
+        class="nav-link"
         >Usuarios</a
       >
       }
-      <a (click)="onAboutClick()" class="cursor-pointer font-medium text-slate-600 transition-colors hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-300"
+      <a routerLink="/about" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page" (click)="closeMenus()" class="nav-link"
         >Nosotros</a
       >
     </nav>
 
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="header-actions">
       <div class="relative" (click)="$event.stopPropagation()">
         <button
           type="button"
           (click)="toggleThemeMenu()"
           class="inline-flex h-10 items-center gap-2 rounded-md border border-slate-200 bg-slate-100 px-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          aria-haspopup="menu"
+          aria-label="Cambiar tema" aria-controls="theme-options"
           [attr.aria-expanded]="isThemeMenuOpen()"
         >
           @if (themeService.resolvedTheme() === 'dark') {
@@ -114,7 +114,7 @@
 
         @if (isThemeMenuOpen()) {
         <div
-          role="menu"
+          id="theme-options"
           class="absolute right-0 top-12 z-50 w-44 rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-900"
         >
           <button
@@ -148,19 +148,27 @@
       @if (authService.isAuthenticated()) {
       <button
         (click)="onLogoutClick()"
-        class="hidden cursor-pointer items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-slate-700 transition-colors hover:bg-slate-50 sm:flex dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+        class="session-button"
       >
         <span>Cerrar Sesión</span>
       </button>
       } @else {
       <button
         (click)="onLoginClick()"
-        class="hidden cursor-pointer items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 sm:flex dark:bg-blue-500 dark:hover:bg-blue-400"
+        class="session-button session-login"
       >
-        <img src="assets/images/imgs/user-id.svg" class="h-4 w-4" alt="Login" />
-        <span>Iniciar sesion</span>
+
+        <span>Iniciar sesión</span>
       </button>
       }
+      <button #mobileToggle type="button" class="mobile-toggle" (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="isMobileMenuOpen()" aria-controls="header-navigation"
+        [attr.aria-label]="isMobileMenuOpen() ? 'Cerrar navegación' : 'Abrir navegación'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          @if (isMobileMenuOpen()) { <path d="m6 6 12 12M6 18 18 6" /> }
+          @else { <path d="M4 6h16M4 12h16M4 18h16" /> }
+        </svg>
+      </button>
     </div>
   </div>
 </header>
@@ -168,16 +176,16 @@
 @if (isLogoutDialogOpen()) {
 <div
   class="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/50 px-4 backdrop-blur-sm transition-opacity duration-200"
-  [ngClass]="logoutDialogState() === 'canceling' ? 'opacity-0' : 'opacity-100'"
+  [class.opacity-0]="logoutDialogState() === 'canceling'"
   role="presentation"
   (click)="onCancelLogout()"
 >
   <section
     role="dialog"
     aria-modal="true"
-    aria-labelledby="logout-title"
+    aria-labelledby="logout-title" cdkTrapFocus [cdkTrapFocusAutoCapture]="true"
     class="w-full max-w-md rounded-lg border bg-white p-5 shadow-2xl transition-all duration-200 dark:bg-slate-900"
-    [ngClass]="{
+    [class]="{
       'scale-100 border-slate-200 opacity-100 dark:border-slate-700': logoutDialogState() === 'idle',
       'scale-95 border-green-300 opacity-95 ring-4 ring-green-500/20 dark:border-green-500/40': logoutDialogState() === 'confirming',
       'translate-y-3 scale-95 border-slate-200 opacity-0 dark:border-slate-700': logoutDialogState() === 'canceling'
@@ -187,7 +195,7 @@
     <div class="flex items-start gap-4">
       <div
         class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors duration-200"
-        [ngClass]="logoutDialogState() === 'confirming'
+        [class]="logoutDialogState() === 'confirming'
           ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-200'
           : 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-200'"
       >
@@ -205,7 +213,7 @@
 
       <div class="min-w-0 flex-1">
         <h2 id="logout-title" class="text-lg font-bold text-slate-900 dark:text-slate-100">
-          Cerrar sesion
+          Cerrar sesión
         </h2>
         <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
           Se cerrará tu sesión actual en Sentineli. Podrás iniciar sesión de nuevo cuando lo necesites.
@@ -218,21 +226,21 @@
         type="button"
         class="inline-flex justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
         [disabled]="logoutDialogState() !== 'idle'"
-        (click)="onCancelLogout()"
+        (click)="onCancelLogout()" cdkFocusInitial
       >
         Cancelar
       </button>
       <button
         type="button"
         class="inline-flex justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-500 dark:hover:bg-blue-400"
-        [ngClass]="logoutDialogState() === 'confirming' ? 'bg-green-600 dark:bg-green-500' : ''"
+        [class]="logoutDialogState() === 'confirming' ? 'bg-green-600 dark:bg-green-500' : ''"
         [disabled]="logoutDialogState() !== 'idle'"
         (click)="onConfirmLogout()"
       >
         @if (logoutDialogState() === 'confirming') {
         Cerrando...
         } @else {
-        Si, cerrar sesion
+        Sí, cerrar sesión
         }
       </button>
     </div>
